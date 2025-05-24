@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Customers</h1>
+<form method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-3">
+            {{ filter.form.date.label_tag }} {{ filter.form.date }}
+        </div>
+        <div class="col-md-3">
+            {{ filter.form.date_range.label_tag }} {{ filter.form.date_range }}
+        </div>
+        <div class="col-md-3">
+            {{ filter.form.data_used.label_tag }} {{ filter.form.data_used }}
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary mt-4">Filter</button>
+        </div>
+    </div>
+</form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Join Date</th>
+            <th>Data Allocation (GB)</th>
+            <th>Savings</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in customers %}
+        <tr>
+            <td><a href="{% url 'customers:customer_detail' customer.pk %}">{{ customer.name }}</a></td>
+            <td>{{ customer.join_date }}</td>
+            <td>{{ customer.data_allocation }}</td>
+            <td>{{ customer.savings }}</td>
+            <td>
+                <a href="{% url 'customers:account_add' customer.pk %}" class="btn btn-sm btn-primary">Add Account</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No customers found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if is_paginated %}
+<nav>
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

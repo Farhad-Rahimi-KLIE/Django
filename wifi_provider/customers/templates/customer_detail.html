@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ customer.name }}</h1>
+<p>Join Date: {{ customer.join_date }}</p>
+<p>Data Allocation: {{ customer.data_allocation }} GB</p>
+<p>Savings: {{ customer.savings }}</p>
+<h2>Accounts</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Data Used (GB)</th>
+            <th>Buy Balance</th>
+            <th>Bill Image</th>
+            <th>Continuous Number</th>
+            <th>Extra Off (GB)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account in customer.accounts.all %}
+        <tr>
+            <td>{{ account.date }}</td>
+            <td>{{ account.data_used }}</td>
+            <td>{{ account.buy_balance }}</td>
+            <td>
+                {% if account.bill_image %}
+                <a href="{{ account.bill_image.url }}" target="_blank">View Bill</a>
+                {% else %}
+                No Bill
+                {% endif %}
+            </td>
+            <td>{{ account.continuous_number }}</td>
+            <td>{{ account.extra_off }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No accounts found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
